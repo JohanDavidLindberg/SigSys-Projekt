@@ -10,15 +10,12 @@ H3 = -1*s^2/(s^2+(R23*(G/(R*C)))*s + G^2/(R^2*C^2))
 %{
 figure("Name","Pole-zero plot H1")
 h1 = iopzplot(H1);
-h1.IOGrouping = "all"; 
 legend('H1');
 figure("Name","Pole-zero plot H2")
 h2 = iopzplot(H2);
-h2.IOGrouping = "all"; 
 legend('H2');
 figure("Name","Pole-zero plot H3")
 h3 = iopzplot(H3);
-h3.IOGrouping = "all";       
 legend('H3');
 
 figure("Name","Impulse response")
@@ -42,7 +39,7 @@ t = 0:(1/fs):5*T0;
 % Fourier series of the saw tooth wave
 w0 = 2 * pi * f0;
 N = 100;
-x = 0.5 * ones(size(t));       % DC component (a0/2 = 0.5 for range 0 to 1)
+x = 0.5 * ones(size(t));       % shift signal up to 0 to 1 v
 
 for n = 1:N
     x = x - (1 / (n * pi)) * sin(n * w0 * t);

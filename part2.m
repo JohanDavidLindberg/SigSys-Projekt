@@ -1,21 +1,23 @@
 % FIlter parameters
 fs = 24000;                       % Sampling frequency 
-Nyq = fs / 2;                     % Nyquist frequency 
-Wp = 8000 / Nyq;                  % Normalized cutoff frequency for graph
-[b, a] = cheby1(7, 3, Wp);        % 7th-order Chebyshev Type I
-freqz(b, a, 1024, fs);            % Plot frequency response
+Wp = 8000 *2*pi                   % Cutoff freq
+[b, a] = cheby1(7, 3, Wp,'s');        % 7th-order Chebyshev Type I
 
 % Input signal generation
 t = 0:1/fs:0.01;                  
 x1 = sin(2*pi*3000*t);             
-x2 = sin(2*pi*8200*t);            
+x2 = sin(2*pi*8000*t);            
 x = x1 + x2;                      
 
-% Write out transferfunction
-sys = tf(b, a, 1/fs, 'Variable', 'z^-1')
+% Bode and plots
+sys = tf(b, a)
+
+opts = bodeoptions
+opts.FreqUnits ='Hz'
+bodeplot(sys, opts)
 
 % Filtering signal
-y = filter(b, a, x);            
+y = lsim(sys,x,t)           
 
 % Plotting time domain
 figure('Color', 'w');
@@ -27,11 +29,11 @@ ylabel('Amplitude');
 title('Chebyshev Lowpass Filter ');
 legend('Input', 'Output');
 
-% --- 6. FFT Amplitude Spectrum Analysis (Problem 5 & Note 2) ---
+% FFT amplitude spectrum
 N = length(x);                    % Number of samples
 
 % Compute FFTs
-X = fft(x);                       %[cite: 2]
+X = fft(x);                       
 Y = fft(y);                       
 
 % Frequency vector in kHz (0 to fs/1000)
